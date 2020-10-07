@@ -1,0 +1,17 @@
+<ng-container *ngIf="results.length">
+  <div class="row my-2" *ngFor="let result of results">
+    <div class="col-6">
+      <a href="http://localhost:3000/media/{{ result.name }}" target="_blank" rel="noopener noreferrer">
+        {{ result.name }}
+      </a>
+      -
+      <ng-container *ngIf="result.value == 1">
+        Picked {{ result.value }} time
+      </ng-container>
+
+      <ng-container *ngIf="result.value != 1">
+        Picked {{ result.value }} times
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
