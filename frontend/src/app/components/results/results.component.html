@@ -1,6 +1,10 @@
 <ng-container *ngIf="results.length">
   <div class="row my-2" *ngFor="let result of results">
     <div class="col-6">
+      <ng-container *ngIf="loaded">
+        Score: {{ calcScore(result.value) }}
+      </ng-container>
+
       <a href="http://localhost:3000/media/{{ result.name }}" target="_blank" rel="noopener noreferrer">
         {{ result.name }}
       </a>

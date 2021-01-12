@@ -9,6 +9,8 @@ import { NetworkService } from '@services/network.service';
 export class ResultsComponent implements OnInit {
 
   results: {[key: string]: number}[] = [];
+  total = 0;
+  loaded = false;
 
   constructor(private netService: NetworkService) { }
 
@@ -18,8 +20,18 @@ export class ResultsComponent implements OnInit {
 
       if (res.results) {
         this.results = res.results;
+
+        this.results.forEach((result) => {
+          this.total += result.value;
+        });
+
+        this.loaded = true;
       }
     });
+  }
+
+  calcScore(picked: number) {
+    return (picked / this.total).toFixed(4);
   }
 
 }
