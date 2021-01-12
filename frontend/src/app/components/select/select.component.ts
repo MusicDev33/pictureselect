@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { NetworkService } from '@services/network.service';
 
 @Component({
@@ -10,6 +10,26 @@ export class SelectComponent implements OnInit {
 
   images: string[] = [];
   numSelected = 0;
+
+  @HostListener('window:keydown.arrowleft', ['$event'])
+  arrowLeftPressed(event: KeyboardEvent) {
+    this.imgSelected(this.images[0]);
+  }
+
+  @HostListener('window:keydown.a', ['$event'])
+  aPressed(event: KeyboardEvent) {
+    this.imgSelected(this.images[0]);
+  }
+
+  @HostListener('window:keydown.arrowright', ['$event'])
+  arrowRightPressed(event: KeyboardEvent) {
+    this.imgSelected(this.images[1]);
+  }
+
+  @HostListener('window:keydown.d', ['$event'])
+  dPressed(event: KeyboardEvent) {
+    this.imgSelected(this.images[1]);
+  }
 
   constructor(private netService: NetworkService) { }
 
