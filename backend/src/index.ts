@@ -24,14 +24,6 @@ const images = fs.readdirSync(imgPath);
 
 // Routes
 
-/*
-app.use(apiBase + 'courses', RoutesLib.CourseRoutes);
-app.use(apiBase + 'persons', RoutesLib.PersonRoutes);
-app.use(apiBase + 'schools', RoutesLib.SchoolRoutes);
-app.use(apiBase + 'announcements', RoutesLib.AnnouncementRoutes);
-app.use(apiBase + 'enrollments', RoutesLib.EnrollmentRoutes);
-app.use(apiBase + 'assignments', RoutesLib.AssignmentRoutes);
-*/
 
 app.use('/media', express.static(path.join(__dirname, '../images')));
 
@@ -54,16 +46,29 @@ app.get('/random', (req: Request, res: Response) => {
   res.json({images: imageNames});
 });
 
+// win:lose:total
 app.post('/select', (req: Request, res: Response) => {
   const selectedImg = req.body.selected;
+  const lostImg = req.body.lost;
   console.log(`${__dirname}/db.json`);
   fs.readFile(`${__dirname}/db.json`, 'utf8', (_, jsonString) => {
     const json = JSON.parse(jsonString);
     if (json.hasOwnProperty(selectedImg)) {
-      const prevValue = json[selectedImg];
-      json[selectedImg] = prevValue + 1;
+      let score = json[selectedImg].split(':');
+      score[0] = parseInt(score[0]) + 1;
+      score[2] = parseInt(score[2]) + 1;
+      json[selectedImg] = score.join(':')
     } else {
-      json[selectedImg] = 1;
+      json[selectedImg] = '1:0:1';
+    }
+
+    if (json.hasOwnProperty(lostImg)) {
+      let score = json[lostImg].split(':');
+      score[1] = parseInt(score[1]) + 1;
+      score[2] = parseInt(score[2]) + 1;
+      json[lostImg] = score.join(':')
+    } else {
+      json[lostImg] = '0:1:1';
     }
     const file = JSON.stringify(json, null, 2);
     fs.writeFile(`${__dirname}/db.json`, file, (err) => {
@@ -81,10 +86,12 @@ app.get('/results', (req: Request, res: Response) => {
     const resArray = [];
 
     for (let prop of Object.keys(results)) {
+      const resultValue = results[prop].split(':');
+      const score = parseInt(resultValue[0]) / parseInt(resultValue[2]);
       console.log(prop);
       const obj: any = {};
       obj['name'] = prop;
-      obj['value'] = results[prop];
+      obj['value'] = score;
       resArray.push(obj);
     }
 

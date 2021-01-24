@@ -18,10 +18,11 @@ export class NetworkService {
     return this.http.get(url).pipe(map((res) => res));
   }
 
-  public selectImg(imgName: string): Observable<object> {
+  public selectImg(imgName: string, loseName: string): Observable<object> {
     const url = `http://localhost:3000/select`;
     const body = {
-      selected: imgName
+      selected: imgName,
+      lost: loseName
     };
 
     return this.http.post(url, body).pipe(map((res) => res));
